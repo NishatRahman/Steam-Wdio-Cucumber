@@ -1,46 +1,55 @@
+import { ElementsList } from "../framework/elements/ElementsList";
+import { Label } from "../framework/elements/Label";
 import BasePage from "./BasePage";
 
 class SearchResultPage extends BasePage {
     constructor() {
-        super($('.market_search_results_title'), "Search Result Page");
+        super('.market_search_results_title', 'Search Result Page');
     }
 
     get resultsTable() {
-        return $('.market_listing_table');
+        return new Label('.market_listing_table', 'Result Table');
     }
 
-    get resultTags() {
-        return $('.market_search_results_header a');
+    get gameTag() {
+        return new Label('//a[@class="market_searchedForTerm"][1]', 'Game Tag');
     }
 
-    get dotaTag() {
-        return $('//a[@class="market_searchedForTerm" and contains(., "Dota 2")]');
+    get heroTag() {
+        return new Label('//a[@class="market_searchedForTerm"][2]', 'Hero Tag');
     }
 
-    get phantomAssassinTag() {
-        return $('//a[@class = "market_searchedForTerm" and contains(., "Phantom Assassin")]');
-    }
-
-    get rareTag() {
-        return $('//a[@class = "market_searchedForTerm" and contains(., "Rare")]');
+    get rarityTag() {
+        return new Label('//a[@class="market_searchedForTerm"][3]', 'Rarity Tag');
     }
 
     get firstItem() {
-        return $('.market_listing_item_name');
+        return new Label('.market_listing_item_name', 'First Item');
     }
 
     get sortPrice() {
-        return $('(//div[@data-sorttype="price"])[1]');
+        return new Label('(//div[@data-sorttype="price"])[1]', 'Sort Price');
+    }
+
+    get priceList() {
+        return new ElementsList('Label', 'div.market_listing_row span span.normal_price', 'Price List');
     }
 
     async isResultTableLoaded() {
-        await expect(this.resultsTable.waitForDisplayed());
+        await this.resultsTable.state().waitForDisplayed();
+    }
+     
+
+    async getGameTag() {
+        return await this.gameTag.getText();
     }
 
-    async validateResultTags() {
-        await expect(this.dotaTag.waitForDisplayed());
-        await expect(this.phantomAssassinTag.waitForDisplayed());
-        await expect(this.rareTag.waitForDisplayed());
+    async getHeroTag() {
+        return await this.heroTag.getText();
+    }
+
+    async getRarityTag() {
+        return await this.rarityTag.getText();
     }
 
     async clickFirstItem() {
@@ -48,18 +57,17 @@ class SearchResultPage extends BasePage {
     }
 
     async sortByPriceAscending() {
+        await this.sortPrice.state().waitForClickable();
         await this.sortPrice.click();
     }
 
     async sortByPriceDescending() {
+        await this.sortPrice.state().waitForClickable();
         await this.sortPrice.click();
     }
 
     async getItemPrices() {
-        let priceElements = await $$('div.market_listing_row span span.normal_price');
-        if (!priceElements || priceElements.length === 0) {
-            throw new Error("No price elements found! Check the selector or page load time.");
-        }
+        let priceElements = await this.priceList.getListOfElements();
         let prices = [];
         for (let el of priceElements) {
             let text = await el.getText();
@@ -70,13 +78,21 @@ class SearchResultPage extends BasePage {
     }
 
     async isSortedAscending() {
-        const prices = await this.getItemPrices();
-        await expect(prices.every((val, i, arr) => i === 0 || arr[i - 1] <= val));
+        await browser.waitUntil(async () => {
+            const prices = await this.getItemPrices();
+            return prices.every((val, i, arr) => i === 0 || arr[i - 1] <= val);
+        }, {
+            timeoutMsg: 'Prices are not sorted in ascending order'
+        });
     }
 
     async isSortedDescending() {
-        const prices = await this.getItemPrices();
-        await expect(prices.every((val, i, arr) => i === 0 || arr[i - 1] >= val));
+        await browser.waitUntil(async () => {
+            const prices = await this.getItemPrices();
+            return prices.every((val, i, arr) => i === 0 || arr[i - 1] >= val);
+        }, {
+            timeoutMsg: 'Prices are not sorted in ascending order'
+        });
     }
 }
 

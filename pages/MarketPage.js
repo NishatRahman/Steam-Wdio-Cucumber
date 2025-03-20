@@ -1,32 +1,35 @@
 import BasePage from './BasePage';
+import { Button } from '../framework/elements/Button'
+import { Label } from '../framework/elements/Label';
+import { Dropdown } from '../framework/elements/Dropdown'
 
 class MarketPage extends BasePage {
     constructor() {
-        super($('.market_title_text'), 'Community Market Page');
+        super('.market_title_text', 'Market Page');
     }
 
     get advancedOptionsButton() {
-        return $('.market_search_advanced_button');
+        return new Button('.market_search_advanced_button', 'Advanced Search Button');
     }
 
     get searchWindow() {
-        return $('=Search Community Market');
+        return new Label('=Search Community Market', 'Search Window');
     }
 
     get gameDropdown() {
-        return $('#app_option_0_selected');
+        return new Dropdown('#app_option_0_selected', 'Game Dropdown');
     }
 
     get dota() {
-        return $('#app_option_570');
+        return new Label('#app_option_570', 'Dota 2');
     }
 
     get heroDropdown() {
-        return $("//select[@name='category_570_Hero[]']");
+        return new Dropdown('//select[@name="category_570_Hero[]"]', 'Hero Dropdown');
     }
 
     get searchButton() {
-        return $('//div[@class="market_advancedsearch_bottombuttons"]//span[contains(text(), "Search")]');
+        return new Button('//div[@class="market_advancedsearch_bottombuttons"]//span[contains(text(), "Search")]', 'Search Button');
     }
 
     async openAdvancedOptions() {
@@ -34,7 +37,7 @@ class MarketPage extends BasePage {
     }
 
     async isSearchWindowOpened() {
-        await expect(this.searchWindow.waitForDisplayed());
+        await this.searchWindow.state().waitForDisplayed();
     }
 
     async selectGame() {
@@ -44,11 +47,11 @@ class MarketPage extends BasePage {
 
     async selectHero(heroName) {
         await this.heroDropdown.click();
-        await this.heroDropdown.selectByVisibleText(heroName);
+        await this.heroDropdown.selectOptionByText(heroName);
     }
 
     async selectRarity(rarityName) {
-        const rarity = $(`=${rarityName}`);
+        const rarity = new Label(`=${rarityName}`, 'Rarity');
         await rarity.click();
     }
 

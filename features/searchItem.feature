@@ -11,6 +11,6 @@ Feature: Steam Community Market item search
     And I select the rarity "Rare"
     And I click the "Search" button
     Then I should see a table with results
-    And the "Showing results for" tag should display correct filters
+    And the "Showing results for" tag should display correct filters "Dota 2", "Rare" and "Phantom Assassin"
     When I click on the first item in the list
     Then I should be taken to the item page with the correct info for selected filters "Dota 2", "Rare" and "Phantom Assassin"

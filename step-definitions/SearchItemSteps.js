@@ -13,7 +13,7 @@ When('I navigate to the Community Market', async () => {
 });
 
 Then('I should see that community market page is opened', async () => {
-    await marketPage.isPageOpened();
+    await expect(marketPage.isPageOpened());
 })
 
 When('I click on "Show advanced options"', async () => {
@@ -21,7 +21,7 @@ When('I click on "Show advanced options"', async () => {
 });
 
 Then('I should see a window with advanced options', async () => {
-    await marketPage.isSearchWindowOpened();
+    await expect(marketPage.isSearchWindowOpened());
 }) 
 
 When('I select the game "Dota 2"', async () => {
@@ -41,11 +41,13 @@ When('I click the "Search" button', async () => {
 });
 
 Then('I should see a table with results', async () => {
-    await searchResultPage.isResultTableLoaded();
+    await expect(searchResultPage.isResultTableLoaded());
 });
 
-Then('the "Showing results for" tag should display correct filters', async () => {
-    await searchResultPage.validateResultTags();
+Then('the "Showing results for" tag should display correct filters {string}, {string} and {string}', async (game, rarity, hero) => {
+    expect(await searchResultPage.getGameTag()).toContain(game);
+    expect(await searchResultPage.getHeroTag()).toContain(hero);
+    expect(await searchResultPage.getRarityTag()).toContain(rarity);
 });
 
 When('I click on the first item in the list', async () => {
@@ -53,8 +55,10 @@ When('I click on the first item in the list', async () => {
 });
 
 Then('I should be taken to the item page with the correct info for selected filters {string}, {string} and {string}', async (game, rarity, hero) => {
-    await itemPage.isPageOpened();
-    await itemPage.validateItemInfo(game, rarity, hero);
+    await expect(itemPage.isPageOpened());
+    expect(await itemPage.getGameName()).toContain(game);
+    expect(await itemPage.getItemType()).toContain(rarity);
+    expect(await itemPage.getDescriptor()).toContain(hero);
 });
 
 When('I sort price by ascending order', async () => {
@@ -62,7 +66,7 @@ When('I sort price by ascending order', async () => {
 });
 
 Then('prices are sorted in correct ascending order', async () => {
-    await searchResultPage.isSortedAscending();
+    await expect(searchResultPage.isSortedAscending());
 });
 
 When('I sort price by descending order', async () => {
@@ -70,5 +74,5 @@ When('I sort price by descending order', async () => {
 });
 
 Then('prices are sorted in correct descending order', async () => {
-    await searchResultPage.isSortedDescending();
+    await expect(searchResultPage.isSortedDescending());
 });

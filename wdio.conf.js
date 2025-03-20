@@ -1,3 +1,5 @@
+const { AfterAll, After } = require("@wdio/cucumber-framework");
+
 exports.config = {
     runner: 'local',
     path: '/',
@@ -43,5 +45,9 @@ exports.config = {
     beforeScenario: async () => {
         await browser.url('/');
         await browser.maximizeWindow();
+    },
+
+    AfterAll: async () => {
+        await browser.deleteSession();
     }
 };
