@@ -12,7 +12,7 @@ Feature: Steam Community Market Search and sort by price
     And I click the "Search" button
     Then I should see a table with results
     And the "Showing results for" tag should display correct filters "Dota 2", "Uncommon" and "Anti-Mage"
-    When I sort price by ascending order
-    Then prices are sorted in correct ascending order
-    When I sort price by descending order
-    Then prices are sorted in correct descending order
+    When I sort price by "ascending" order
+    Then prices are sorted in correct "ascending" order
+    When I sort price by "descending" order
+    Then prices are sorted in correct "descending" order

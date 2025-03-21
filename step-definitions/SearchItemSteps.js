@@ -61,18 +61,10 @@ Then('I should be taken to the item page with the correct info for selected filt
     expect(await itemPage.getDescriptor()).toContain(hero);
 });
 
-When('I sort price by ascending order', async () => {
-    await searchResultPage.sortByPriceAscending();
+When('I sort price by {string} order', async (order) => {
+    await searchResultPage.sortByPrice(order);
 });
 
-Then('prices are sorted in correct ascending order', async () => {
-    await expect(searchResultPage.isSortedAscending());
-});
-
-When('I sort price by descending order', async () => {
-    await searchResultPage.sortByPriceDescending();
-});
-
-Then('prices are sorted in correct descending order', async () => {
-    await expect(searchResultPage.isSortedDescending());
+Then('prices are sorted in correct {string} order', async (order) => {
+    await expect(searchResultPage.isSorted(order));
 });
