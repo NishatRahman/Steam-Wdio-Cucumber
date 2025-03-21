@@ -45,9 +45,9 @@ Then('I should see a table with results', async () => {
 });
 
 Then('the "Showing results for" tag should display correct filters {string}, {string} and {string}', async (game, rarity, hero) => {
-    expect(await searchResultPage.getGameTag()).toContain(game);
-    expect(await searchResultPage.getHeroTag()).toContain(hero);
-    expect(await searchResultPage.getRarityTag()).toContain(rarity);
+    expect(await searchResultPage.getTag(game)).toContain(game);
+    expect(await searchResultPage.getTag(hero)).toContain(hero);
+    expect(await searchResultPage.getTag(rarity)).toContain(rarity);
 });
 
 When('I click on the first item in the list', async () => {

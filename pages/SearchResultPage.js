@@ -4,9 +4,6 @@ import BasePage from "./BasePage";
 
 class SearchResultPage extends BasePage {
     #resultsTable = new Label('.market_listing_table', 'Result Table');
-    #gameTag = new Label('//a[@class="market_searchedForTerm"][1]', 'Game Tag');
-    #heroTag = new Label('//a[@class="market_searchedForTerm"][2]', 'Hero Tag');
-    #rarityTag = new Label('//a[@class="market_searchedForTerm"][3]', 'Rarity Tag');
     #firstItem = new Label('.market_listing_item_name', 'First Item');
     #sortPrice = new Label('(//div[@data-sorttype="price"])[1]', 'Sort Price');
     #priceList = new ElementsList(Label, 'div.market_listing_row span span.normal_price', 'Price List');
@@ -17,18 +14,12 @@ class SearchResultPage extends BasePage {
 
     async isResultTableLoaded() {
         await this.#resultsTable.state().waitForDisplayed();
-    }   
-
-    async getGameTag() {
-        return await this.#gameTag.getText();
-    }
-
-    async getHeroTag() {
-        return await this.#heroTag.getText();
-    }
-
-    async getRarityTag() {
-        return await this.#rarityTag.getText();
+    }  
+    
+    async getTag(tagName) {
+        const tag = new Label(`//a[contains(@class, "market_searchedForTerm") and normalize-space(.)="${tagName}"]`, `${tagName} Tag`);
+        await tag.state().waitForDisplayed();
+        return await tag.getText();
     }
 
     async clickFirstItem() {
